@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Renascimento da Torre ✨</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #1f1f1f; color: #eee; padding: 20px; }
+    h1 { color: #f0c; }
+    form, .filtros, .tiragens { margin-bottom: 30px; }
+    input, textarea, button, select {
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+    }
+    textarea { height: 80px; }
+    button { background: #f0c; color: #000; cursor: pointer; font-weight: bold; }
+    ul { list-style: none; padding: 0; }
+    li {
+      background: #333;
+      margin-bottom: 10px;
+      padding: 15px;
+      border-radius: 8px;
+    }
+    .botoes { margin-top: 10px; }
+    .botoes button { margin-right: 10px; }
+  </style>
+</head>
+<body>
+<h1>🌌 Renascimento da Torre</h1>
+
+<form id="formulario">
+  <input type="text" id="titulo" placeholder="Título da tiragem" required>
+  <input type="date" id="data" required>
+  <input type="text" id="pergunta" placeholder="Pergunta feita ao tarot" required>
+  <input type="text" id="cartas" placeholder="Cartas que saíram (ex: O Louco, 9 de Espadas)" required>
+  <input type="text" id="categoria" placeholder="Categoria (ex: Trabalho, Amor...)" required>
+  <textarea id="reflexao" placeholder="Reflexão da tiragem" required></textarea>
+  <button type="submit">Salvar Tiragem</button>
+</form>
+
+<div class="filtros">
+  <input type="text" id="filtroCarta" placeholder="Buscar por carta">
+  <input type="text" id="filtroReflexao" placeholder="Buscar por palavra-chave na reflexão">
+  <input type="text" id="filtroCategoria" placeholder="Buscar por categoria">
+  <button onclick="buscarPorCarta()">Filtrar por carta</button>
+  <button onclick="buscarPorReflexao()">Filtrar por palavra</button>
+  <button onclick="buscarPorCategoria()">Filtrar por categoria</button>
+  <button onclick="carregarTiragens()">Mostrar todas</button>
+  <button onclick="ocultarTodas()">Ocultar todas</button>
+</div>
+
+<ul id="listaTiragens"></ul>
+
+<script>
+  const API = 'http://localhost:8080/tiragens';
+
+  const form = document.getElementById('formulario');
+  const lista = document.getElementById('listaTiragens');
+
+  function renderizar(tiragens) {
+    lista.innerHTML = '';
+    tiragens.forEach(t => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+          <strong>${t.titulo}</strong> (${t.data})<br>
+          <em>${t.pergunta}</em><br>
+          <strong>Cartas:</strong> ${t.cartas}<br>
+          <strong>Categoria:</strong> ${t.categoria}<br>
+          <p>${t.reflexao}</p>
+          <div class="botoes">
+            <button onclick="editar(${t.id})">Editar</button>
+            <button onclick="deletar(${t.id})">Deletar</button>
+          </div>
+        `;
+      lista.appendChild(li);
+    });
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const tiragem = {
+      titulo: document.getElementById('titulo').value,
+      data: document.getElementById('data').value,
+      pergunta: document.getElementById('pergunta').value,
+      cartas: document.getElementById('cartas').value,
+      reflexao: document.getElementById('reflexao').value,
+      categoria: document.getElementById('categoria').value
+    };
+
+    await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(tiragem)
+    });
+
+    form.reset();
+    carregarTiragens();
+  });
+
+  async function carregarTiragens() {
+    const resp = await fetch(API);
+    const dados = await resp.json();
+    renderizar(dados);
+  }
+
+  function ocultarTodas() {
+    lista.innerHTML = '';
+  }
+
+  async function deletar(id) {
+    await fetch(`${API}/${id}`, { method: 'DELETE' });
+    carregarTiragens();
+  }
+
+  async function editar(id) {
+    const novaReflexao = prompt("Nova reflexão:");
+    if (!novaReflexao) return;
+    const resp = await fetch(`${API}/${id}`);
+    const tiragem = await resp.json();
+    tiragem.reflexao = novaReflexao;
+    await fetch(`${API}/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(tiragem)
+    });
+    carregarTiragens();
+  }
+
+  async function buscarPorCarta() {
+    const carta = document.getElementById('filtroCarta').value;
+    const resp = await fetch(`${API}/buscar/carta?carta=${carta}`);
+    const dados = await resp.json();
+    renderizar(dados);
+  }
+
+  async function buscarPorReflexao() {
+    const palavra = document.getElementById('filtroReflexao').value;
+    const resp = await fetch(`${API}/buscar/reflexao?palavra=${palavra}`);
+    const dados = await resp.json();
+    renderizar(dados);
+  }
+
+  async function buscarPorCategoria() {
+    const categoria = document.getElementById('filtroCategoria').value;
+    const resp = await fetch(`${API}/buscar/categoria?categoria=${categoria}`);
+    const dados = await resp.json();
+    renderizar(dados);
+  }
+</script>
+</body>
+</html>

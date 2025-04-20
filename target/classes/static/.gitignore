@@ -1,0 +1,9 @@
+# Ignorar banco de dados H2
+*.mv.db
+
+# Ignorar pasta de compilação
+/target
+
+# Ignorar arquivos do IntelliJ
+.idea/
+*.iml
