@@ -1,6 +1,13 @@
 ```markdown
 # 🌌 Renascimento da Torre
 
+![Java](https://img.shields.io/badge/Java-17-red)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3-green)
+![Projeto Pessoal](https://img.shields.io/badge/feito%20com-alma%20e%20dor-8a2be2)
+![Status](https://img.shields.io/badge/status-em%20constru%C3%A7%C3%A3o-purple)
+
+<img src="https://github.com/lasuccubuss/renascimento-da-torre/raw/main/src/main/resources/static/banner.jpg" alt="Renascimento da Torre Banner" style="width: 100%; border-radius: 10px;" />
+
 Um projeto pessoal com alma, código e intuição.
 
 Este é um sistema simples e simbólico para registrar e consultar tiragens de tarot — desenvolvido com Java + Spring Boot no back-end e uma interface HTML prática no front-end. Tudo feito com propósito, sensibilidade e um toque de renascimento.
@@ -67,6 +74,10 @@ O projeto conta com um `index.html` que permite:
 - Ocultar e mostrar tiragens com um clique
 
 A vibe é dark, introspectiva e funcional — porque código também é alma 💜
+
+### 🎬 Interface em ação
+
+<img src="https://github.com/lasuccubuss/renascimento-da-torre/raw/main/src/main/resources/static/demo.gif" alt="Demonstração da interface Renascimento da Torre" style="border-radius: 10px;" />
 
 ---
 
