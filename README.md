@@ -1,7 +1,6 @@
 <p align="center">
   <img src="https://github.com/lasuccubuss/renascimento-da-torre/blob/master/assets/img.png?raw=true" alt="Banner Renascimento da Torre">
 </p>
-![banner](https://github.com/lasuccubuss/renascimento-da-torre/blob/master/assets/img.png?raw=true)
 ```markdown
 # 🌌 Renascimento da Torre
 
